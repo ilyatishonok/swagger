@@ -5,22 +5,23 @@ import Jog from './Jog';
 
 export interface IJogsListProps {
     isFetching: boolean;
-    isVisible: boolean;
     jogs: JogEntity[];
     error?: string;
-    fetchJogs: () => void;
+    fetchJogs: () => Promise<void>;
 }
 
-const JogsContainer = styled.ul<{ isVisible: boolean }>`
+const JogsContainer = styled.ul`
     list-style: none;
-    display: ${ props => props.isVisible ? 'flex' : 'none'};
+    display: flex;
     flex-direction: column;
     align-items: center;
 `;
 
 export default class JogsList extends React.PureComponent<IJogsListProps> {
     componentDidMount() {
-        this.props.fetchJogs();
+        this.props.fetchJogs().then(() => {
+            console.log(this);
+        });
     }
 
     render() {
@@ -31,7 +32,7 @@ export default class JogsList extends React.PureComponent<IJogsListProps> {
         }
 
         return (
-            <JogsContainer isVisible={this.props.isVisible}>
+            <JogsContainer>
                 {jogs.map((jog) => {
                     return <Jog key={jog.id} jog={jog}></Jog>
                 })}

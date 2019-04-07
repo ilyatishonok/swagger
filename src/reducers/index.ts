@@ -1,20 +1,20 @@
 import { combineReducers } from 'redux';
 import appReducer, { AppState } from './app';
 import requestsReducer, { RequestsState } from './requests';
-import jogsListReducer, { JogsListState } from './jogsList';
+import jogsReducer, { JogsState } from './jogsList';
 import entitiesReducer, { EntitiesState } from './entities/entities';
 
 
 export interface RootState {
     app: AppState;
     requests: RequestsState;
-    jogs: JogsListState;
+    jogs: JogsState;
     entities: EntitiesState;
 }
 
 export const rootReducer = combineReducers({
     app: appReducer,
     requests: requestsReducer,
-    jogs: jogsListReducer,
+    jogs: jogsReducer,
     entities: entitiesReducer,
 });

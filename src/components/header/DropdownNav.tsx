@@ -5,8 +5,7 @@ export interface IDropdownNavProps {
     isOpened: boolean;
 }
 
-const DropdownArea = styled.ul`
-    display: none;
+const DropdownArea = styled.div<{ isVisible: boolean }>`
     width: 100%;
     height: 100%;
     z-index: 10000;
@@ -16,26 +15,44 @@ const DropdownArea = styled.ul`
     padding: 0;
     padding-top: 4.7rem;
     background: white;
+    visibility: hidden;
+    opacity: 0;
 
     @media (max-width: 500px) {
-        overflow-y: hidden;
         display: flex;
+        visibility: ${props => props.isVisible ? 'visible' : 'hidden' };
+        opacity: ${props => props.isVisible ? '1' : '0' };
         align-items: center;
-
-        body {
-            overflow: hidden;
-        }
+        flex-direction: column;
     }
 `;
 
-const NavigationElement = styled.li``;
+const NavLinks = styled.ul`
+    text-align: center;
+    list-style: none;
+    margin-top: 5rem;
+    padding: 0;
+`;
+
+const NavigationElement = styled.li<{ selected?: boolean, theme: any}>`
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    color: ${ props => props.selected ? props.theme.main : 'black' };
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
 
 
-const DropdownNav = () => (
-    <DropdownArea>
-        <NavigationElement>JOGS</NavigationElement>
-        <NavigationElement>INFO</NavigationElement>
-        <NavigationElement>CONTACT US</NavigationElement>
+const DropdownNav = (props: IDropdownNavProps) => (
+    <DropdownArea isVisible={props.isOpened}>
+        <NavLinks>
+            <NavigationElement>JOGS</NavigationElement>
+            <NavigationElement selected>INFO</NavigationElement>
+            <NavigationElement>CONTACT US</NavigationElement>
+        </NavLinks>
     </DropdownArea>
 );
 

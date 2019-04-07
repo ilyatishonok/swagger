@@ -6,7 +6,7 @@ import JogsList from './JogsList';
 
 const mapStateToProps = (state: RootState) => ({
     isFetching: state.requests['FETCH_JOGS'],
-    error: state.jogs.error,
+    error: state.jogs.jogsById.error,
     jogs: getJogsById(state),
 });
 

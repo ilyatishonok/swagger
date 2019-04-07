@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import JogsList from '../../jogs-list';
@@ -10,19 +11,11 @@ const AddJogButton = styled.div`
     bottom: 1rem;
 `;
 
-const JogsPage = () => {
-    const [ isAddFormEnabled, changeAddFormStatus ] = useState(false);
-    const [ isEditFormEnabled, changeEditFormStatus ] = useState(false);
-
+const JogsPage = (props: RouteComponentProps) => {
     return (
         <>
-            <JogsList isVisible={!isAddFormEnabled} />
-            <Modal isOpen={isAddFormEnabled} onRequestClose={() => changeAddFormStatus(false)}>
-                <div>
-                    Hello
-                </div>
-            </Modal>
-            <AddJogButton onClick={() => changeAddFormStatus(!isAddFormEnabled)}><img src={icon} /></AddJogButton>
+            <JogsList />
+            <AddJogButton onClick={() => props.history.push('/jogs/add')}><img src={icon} /></AddJogButton>
         </>
     );
 }

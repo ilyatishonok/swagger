@@ -14,7 +14,10 @@ const jogEntityReducer = (state: NormalizedEntity<JogEntity> = {}, action: Entit
     switch (action.type) {
         default:
             if (action.entities && action.entities.jogs) {
-                return merge(action.entities.jogs, state);
+                return {
+                    ...state,
+                    ...action.entities.jogs
+                };
             }
             
             return state;

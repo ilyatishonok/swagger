@@ -4,6 +4,7 @@ import FilterIcon from './icons/FilterIcon';
 import LogoIcon from './icons/LogoIcon';
 import DropdownNav from './DropdownNav';
 import HamburgerIcon from './icons/HamburgerIcon';
+import Filter from './FilterConnector';
 
 export interface IHeaderProps {
     isAuthenticated: boolean;
@@ -24,12 +25,18 @@ const GlobalStyle = createGlobalStyle<{ isModalOpen: boolean}>`
 
 const HeaderBar = styled.header<{ isDropDownOpened: boolean; theme: any }>`
     display: flex;
+    top: 0;
+    position: sticky;
     align-items: center;
     justify-content: space-between;
-    background-color: ${ props => props.isDropDownOpened ? 'transparent' : props.theme.main};
+    background-color: ${ props => props.theme.main };
     z-index: 100000;
     height: 2.7rem;
     padding: 1rem;
+
+    @media (max-width: 500px) {
+        background-color: ${props => props.isDropDownOpened ? 'transparent' : props.theme.main };
+    }
 `;
 
 const ActionBar = styled.div`
@@ -74,7 +81,11 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
                         <NavigationLink>INFO</NavigationLink>
                         <NavigationLink>CONTACT US</NavigationLink>
                     </Navigation>
-                    <FilterIcon hide={this.state.isDropdownOpened} />
+                    <FilterIcon isActive={this.state.isFilterEnabled} onClick={() => {
+                        this.setState((state) => ({
+                            isFilterEnabled: !state.isFilterEnabled,
+                        }));
+                    }} hide={this.state.isDropdownOpened} />
                     <HamburgerIcon isOpened={this.state.isDropdownOpened} onClick={this.openDropdown} />
                 </ActionBar>
         );
@@ -88,7 +99,8 @@ export default class Header extends React.Component<IHeaderProps, IHeaderState> 
                     <LogoIcon reverse={this.state.isDropdownOpened} />
                     {this.props.isAuthenticated && this.renderActionBar()}
                 </HeaderBar>
-                {this.state.isDropdownOpened && <DropdownNav /> }
+                { this.state.isFilterEnabled && <Filter />}
+                <DropdownNav isOpened={this.state.isDropdownOpened} />
             </>
         );
     }

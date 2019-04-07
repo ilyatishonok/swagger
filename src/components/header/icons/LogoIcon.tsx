@@ -6,7 +6,11 @@ export interface ILogoProps {
 }
 
 const StyledLogo = styled.svg<ILogoProps & { theme: any }>`
-    fill: ${ props => props.reverse ? props.theme.main : 'white' };
+    fill: #fff;
+
+    @media (max-width: 500px) {
+        fill: ${ props => props.reverse ? props.theme.main : '#fff' };
+    }
 `;
 
 const Logo = (props: ILogoProps) => (
