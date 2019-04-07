@@ -5,6 +5,7 @@ import history from '../history';
 import { RootState } from '../reducers';
 import { AppStates } from '../enums/app';
 import { setUserAuthenticationStatus, setAppState, AppActions } from './appActions';
+import { setRequestStatus, RequestsActions } from './requestsActions';
 
 export interface LoginUserResponse {
     response: {
@@ -12,8 +13,9 @@ export interface LoginUserResponse {
     }
 }
 
-export const login = (): ThunkAction<void, RootState, void, AppActions> => {
-    return async (dispatch) => {        
+export const login = (): ThunkAction<void, RootState, void, AppActions | RequestsActions> => {
+    return async (dispatch) => { 
+        dispatch(setRequestStatus(`LOGIN`, true));       
         const response: AxiosResponse<LoginUserResponse> = await api.post('auth/uuidLogin', {
             uuid: 'hello',
         });
@@ -22,6 +24,8 @@ export const login = (): ThunkAction<void, RootState, void, AppActions> => {
 
         dispatch(setUserAuthenticationStatus(true));
         dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
+
+        dispatch(setRequestStatus(`LOGIN`, false));
 
         history.push('/');
     }

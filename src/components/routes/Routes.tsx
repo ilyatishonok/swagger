@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { Switch } from 'react-router-dom';
 import { AppStates } from '../../enums/app';
 import PrivateRoute from './PrivateRoute';
+import Header from '../header';
 import LoginPage from '../pages/login-page';
+import infinity from './infinity.svg';
 import JogsPage from '../pages/jogs-page';
 
 export interface IRoutesProps {
@@ -20,14 +22,17 @@ const Routes = (props: IRoutesProps) => {
     })
 
     if (appCode === AppStates.APP_UNINITIALIZED || appCode === AppStates.APP_INITIALIZING) {
-        return <div>Loading</div>
+        return <img src={infinity} />
     }
 
     return (
-        <Switch>
-            <PrivateRoute path="/login" component={LoginPage} isInverted />
-            <PrivateRoute exact path="/" component={JogsPage} />
-        </Switch>
+        <>
+            <Header />
+            <Switch>
+                <PrivateRoute path="/login" component={LoginPage} isInverted />
+                <PrivateRoute exact path="/" component={JogsPage} />
+            </Switch>
+        </>
     );
 }
 

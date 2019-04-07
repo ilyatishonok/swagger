@@ -4,7 +4,6 @@ import { Router } from 'react-router-dom';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import history from '../../history';
 import store from '../../store';
-import Header from '../header';
 import Routes from '../routes';
 
 const GlobalStyle = createGlobalStyle`
@@ -31,7 +30,6 @@ const App = () => (
         <ThemeProvider theme={theme}>
             <React.Fragment>
                 <GlobalStyle />
-                <Header />
                 <Router history={history}>
                     <Routes />
                 </Router>

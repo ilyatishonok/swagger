@@ -5,6 +5,7 @@ import { combineReducers } from 'redux';
 
 interface JogsByIdState {
     data: string[];
+    page: number;
     error?: string;
 }
 
@@ -20,6 +21,7 @@ export interface JogsState {
 
 const jogsByIdInitialState = {
     data: [],
+    page: 1,
 };
 
 const filterInitialState = {
