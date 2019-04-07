@@ -13,10 +13,18 @@ const DropdownArea = styled.ul`
     position: fixed;
     top: 0;
     margin: 0;
-    padding-top: 3.7rem;
+    padding: 0;
+    padding-top: 4.7rem;
     background: white;
+
     @media (max-width: 500px) {
-        display: block;
+        overflow-y: hidden;
+        display: flex;
+        align-items: center;
+
+        body {
+            overflow: hidden;
+        }
     }
 `;
 

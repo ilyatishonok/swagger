@@ -1,0 +1,11 @@
+export enum AppActionTypes {
+    SET_APP_STATE = '@@app/SET_APP_STATE',
+    SET_USER_AUTHENTICATION_STATUS = '@@app/SET_USER_AUTHENTICATION_STATUS',
+};
+
+export enum AppStates {
+    APP_UNINITIALIZED = 0,
+    APP_INITIALIZING = 1,
+    APP_SUCCESS_INITIALIZED = 2,
+    APP_FAILURE_INITIALIZED = 3,
+}

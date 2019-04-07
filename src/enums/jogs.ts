@@ -1,0 +1,5 @@
+export enum JogsActionTypes {
+    FETCH_JOGS_REQUEST = '@@jogs/FETCH_JOGS_REQUEST',
+    FETCH_JOGS_SUCCESS ='@@jogs/FETCH_JOGS_SUCCESS',
+    FETCH_JOGS_FAILURE = '@@jogs/FETCH_JOGS_FAILURE',
+};

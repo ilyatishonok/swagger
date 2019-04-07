@@ -1,7 +1,11 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import { Router } from 'react-router-dom';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import history from '../../history';
+import store from '../../store';
 import Header from '../header';
-import LoginPage from '../pages/login-page';
+import Routes from '../routes';
 
 const GlobalStyle = createGlobalStyle`
     html, body {
@@ -24,13 +28,17 @@ const theme = {
 };
 
 const App = () => (
-    <ThemeProvider theme={theme}>
-        <React.Fragment>
-            <GlobalStyle />
-            <Header isAuthenticated />
-            <LoginPage />
-        </React.Fragment>
-    </ThemeProvider>
+    <Provider store={store}>
+        <ThemeProvider theme={theme}>
+            <React.Fragment>
+                <GlobalStyle />
+                <Header />
+                <Router history={history}>
+                    <Routes />
+                </Router>
+            </React.Fragment>
+        </ThemeProvider>
+    </Provider>
 );
 
 export default App;
