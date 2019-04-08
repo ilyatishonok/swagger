@@ -39,7 +39,9 @@ export const loadApp = (): ThunkAction<void, RootState, void, Action> => {
 
         const response: AxiosResponse = await api.get('/auth/user');
 
-        dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
-        dispatch(setUserAuthenticationStatus(true));
+        setTimeout(() => {
+            dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
+            dispatch(setUserAuthenticationStatus(true));
+        }, 2000);
     }
 }

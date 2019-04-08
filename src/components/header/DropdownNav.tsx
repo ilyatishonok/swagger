@@ -1,14 +1,21 @@
 import React from 'react';
+import { withRouter, RouteComponentProps } from "react-router";
+import { NavLink } from "react-router-dom";
 import styled from 'styled-components';
 
 export interface IDropdownNavProps {
+    navigationElements: [{
+        title: string;
+        route: string;
+    }];
     isOpened: boolean;
+    onDropdownClose: () => void;
 }
 
 const DropdownArea = styled.div<{ isVisible: boolean }>`
     width: 100%;
     height: 100%;
-    z-index: 10000;
+    z-index: 99;
     position: fixed;
     top: 0;
     margin: 0;
@@ -38,22 +45,30 @@ const NavigationElement = styled.li<{ selected?: boolean, theme: any}>`
     font-size: 1.2rem;
     margin-top: 1rem;
     cursor: pointer;
-    color: ${ props => props.selected ? props.theme.main : 'black' };
 
     &:hover {
         text-decoration: underline;
     }
+    
+    &>a {
+        color: ${ props => props.selected ? props.theme.main : 'black' };
+        text-decoration: none;
+    }
 `;
 
 
-const DropdownNav = (props: IDropdownNavProps) => (
+const DropdownNav = (props: IDropdownNavProps & RouteComponentProps) => (
     <DropdownArea isVisible={props.isOpened}>
         <NavLinks>
-            <NavigationElement>JOGS</NavigationElement>
-            <NavigationElement selected>INFO</NavigationElement>
-            <NavigationElement>CONTACT US</NavigationElement>
+            {props.navigationElements.map((({ route, title}) => {
+                return (
+                    <NavigationElement selected={props.location.pathname === route} key={title}>
+                        <NavLink onClick={props.onClose} to={route}>{title}</NavLink>
+                    </NavigationElement>
+                )
+            }))}
         </NavLinks>
     </DropdownArea>
 );
 
-export default DropdownNav;
+export default withRouter(DropdownNav);

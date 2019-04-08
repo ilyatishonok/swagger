@@ -12,7 +12,7 @@ import { RootState } from '../reducers';
 
 interface IFetchJogsResponse {
     response: {
-        jogs: JogEntity;
+        jogs: JogEntity[];
     };
 }
 
@@ -81,7 +81,8 @@ export const fetchJogs = (): ThunkAction<Promise<void>, RootState, void, Action>
 
         const response: AxiosResponse<IFetchJogsResponse> = await api.get('/data/sync');
 
-        const normalizedJogs = normalize(response.data.response.jogs, jogsSchema);
+        const reversedJogs = [...response.data.response.jogs].reverse();
+        const normalizedJogs = normalize(reversedJogs, jogsSchema);
 
         dispatch(mergeEntites(normalizedJogs.entities));
         dispatch(setRequestStatus('FETCH_JOGS', false));

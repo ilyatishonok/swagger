@@ -10,11 +10,14 @@ const GlobalStyle = createGlobalStyle`
     html, body {
         margin: 0;
         padding: 0;
-        height: 100%;
-        width: 100%;
+    }
+
+    html {
+        overflow-y: scroll;
     }
 
     #root {
+        header: 100%;
         display: flex;
         flex-direction: column;
     }

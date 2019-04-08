@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import { Switch } from 'react-router-dom';
 import { AppStates } from '../../enums/app';
 import PrivateRoute from './PrivateRoute';
@@ -12,6 +13,10 @@ export interface IRoutesProps {
     loadApp: () => void;
 }
 
+const Loading = styled.img`
+    margin: auto;
+`;
+
 const Routes = (props: IRoutesProps) => {
     const { appCode, loadApp } = props;
 
@@ -22,7 +27,9 @@ const Routes = (props: IRoutesProps) => {
     })
 
     if (appCode === AppStates.APP_UNINITIALIZED || appCode === AppStates.APP_INITIALIZING) {
-        return <img src={infinity} />
+        return (
+            <Loading src={infinity} />
+        );
     }
 
     return (

@@ -37,6 +37,11 @@ const jogsByIdReducer = (state: JogsByIdState = jogsByIdInitialState, action: Jo
             return { ...state, data: action.payload };
         case JogsActionTypes.FETCH_JOGS_FAILURE:
             return { ...state, error: action.payload };
+        case JogsActionTypes.ADD_JOG:
+            return { 
+                ...state, 
+                data: [action.payload, ...state.data],
+            };
         default:
             return state;
     }
