@@ -107,7 +107,7 @@ export const fetchJogs = (): ThunkAction<Promise<void>, RootState, void, Action>
             //More server latency
             setTimeout(() => {
                 dispatch(mergeEntities(normalizedJogs.entities));
-                dispatch(fetchJogsSuccess([]));
+                dispatch(fetchJogsSuccess(normalizedJogs.result));
                 dispatch(setRequestStatus('FETCH_JOGS', false));
             }, 1000);
         } catch (error) {
