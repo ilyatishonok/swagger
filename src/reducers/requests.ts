@@ -1,5 +1,5 @@
-import { RequestsActionTypes } from '../enums/requests';
-import { RequestsActions } from '../actions/requestsActions';
+import { RequestsActionTypes } from 'enums/requests';
+import { RequestsActions } from 'actions/requestsActions';
 
 export interface RequestsState {
     [key: string]: boolean;
@@ -14,6 +14,6 @@ const requestsReducer = (state: RequestsState = {}, action: RequestsActions) => 
         default:
             return state;
     }
-}
+};
 
 export default requestsReducer;

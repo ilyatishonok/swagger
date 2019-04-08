@@ -1,83 +1,106 @@
 import React from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
-import icon from './icon.svg';
-import success from './success.svg';
-import cancel from './cancel.svg';
+import SuccessIcon from './icons/SuccessIcon';
+import CancelIcon from './icons/CancelIcon';
 
 export interface IFormFields {
     time: number | null;
     distance: number | null;
 }
 
-export type IFormErrors<P> = {
+export type IFormErrors<T> = {
     [P in keyof T]?: string;
 }
 
-export interface IJogsAddFormProps {
+export interface IJogFormOwnProps {
     id?: string;
-    initialValues?: Partial<IFormFields>;
     onCancel: () => void;
     onSuccess?: () => void;
+    onFailure?: () => void;
     focusAfterRender?: boolean;
+}
+
+export interface IJogFormStoreProps {
+    initialValues?: Partial<IFormFields>;
+}
+
+export interface IJogFormDispatchProps {
     onSubmit: (time: number, distance: number) => Promise<void>;
 }
+
+export type IJogsAddFormProps = IJogFormDispatchProps & IJogFormOwnProps & IJogFormStoreProps;
 
 export interface IJogsAddFormState {
     fields: IFormFields;
     errors: IFormErrors<IFormFields>;
 }
 
-const StyledAddForm = styled.form`
-    display: flex;
-    flex-direction: row;
-
-    @media (max-width: 500px) {
-        width: 100%;
-        flex-direction: column;
-        align-items: center;
-    }
-`;
-
-const Input = styled.input`
-    @media (max-width: 500px) {
-        width: 100%;
-    }
-`;
-
-const Fields = styled.div`
-    margin-left: 2.5rem;
+const StyledEditForm = styled.form`
     display: flex;
     flex-direction: column;
 
     @media (max-width: 500px) {
-        margin-left: 0;
+        width: 100%;
+        align-items: center;
     }
 `;
 
-const Field = styled.div`
+const FormInput = styled.input`
+    padding: 0.3rem;
+    border-radius: 0.2rem;
+    outline: none;
+    @media (max-width: 500px) {
+        width: 100%;
+    }
+`;
+
+const EditFormField = styled.div`
     margin-top: 0.5rem;
+`;
+
+const EditActions = styled.div`
+    display: flex;
+    flex-direction: row;    
+    justify-content: space-around;
+    width: 80%;
+    margin-top: 1rem;
+    
+    @media (max-width: 500px) {
+        margin-left: 0;
+        width: 30%;
+    }
+`;
+
+const StyledAddForm = styled.form`
+    margin-top: 1rem;
+    padding: 1rem 3rem 1rem 3rem;
+    border-radius: 1rem;
+    background: ${ props => props.theme.main };
+`;
+
+const AddFormField = styled.div`
+    margin-top: 1rem;
+    
+    &>input {
+        padding: 0.4rem;
+        width: 100%;
+    }
+`;
+
+const AddFormActions = styled.div`
+    display: flex;
+    flex-direction: row;    
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 1rem;
 `;
 
 const Error = styled.div`
     color: red;
 `;
 
-const Actions = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin-left: 1rem;
-    
-    @media (max-width: 500px) {
-        margin-top: 1rem;
-        margin-left: 0;
-        width: 30%;
-        flex-direction: row;
-    }
-`;
-
-const Action = styled.img`
+const Action = styled.div`
     cursor: pointer;
 `;
 
@@ -121,7 +144,7 @@ export default class JogsAddForm extends React.Component<IJogsAddFormProps, IJog
 
     private onSubmit = (event: any) => {
         event.preventDefault();
-        const { id, onSubmit, onSuccess } = this.props;
+        const { onSubmit, onSuccess, onFailure } = this.props;
         const { fields: { time, distance } } = this.state;
 
         const errors = this.validateFields();
@@ -134,12 +157,14 @@ export default class JogsAddForm extends React.Component<IJogsAddFormProps, IJog
 
         return onSubmit(time!, distance!).then(() => {
             onSuccess && onSuccess();
+        }).catch(() => {
+            onFailure && onFailure();
         });
     }
 
     private validateFields() {
         const { time, distance } = this.state.fields;
-        const errors = {};
+        const errors: IFormErrors<IFormFields> = {};
 
         if (time === null) {
             errors.time = 'This field is required';
@@ -168,55 +193,78 @@ export default class JogsAddForm extends React.Component<IJogsAddFormProps, IJog
         this.setState({ fields });
     }
 
-    public renderInput(fieldName: keyof IFormFields) {
+    public renderInput(fieldName: keyof IFormFields, focus?: boolean) {
         return (
-            <Input value={this.state.fields[fieldName] || ''} onChange={(event) => this.onChange(event, fieldName)} />
+            <FormInput
+                value={this.state.fields[fieldName] || ''}
+                onChange={(event) => this.onChange(event, fieldName)}
+                ref={focus ? this.inputRef : null}
+            />
+        );
+    }
+
+    public renderEditForm() {
+        const { onCancel } = this.props;
+        const { errors } = this.state;
+
+        return (
+            <StyledEditForm>
+                <div>
+                    <EditFormField>
+                        <b>Distance: </b>
+                        {this.renderInput('distance')}
+                        {errors.distance && <Error>{errors.distance}</Error>}
+                    </EditFormField>
+                    <EditFormField>
+                        <b>Time: </b>
+                        {this.renderInput('time')}
+                        {errors.time && <Error>{errors.time}</Error>}
+                    </EditFormField>
+                </div>
+                <EditActions>
+                    <Action onClick={onCancel}>
+                        <CancelIcon/>
+                    </Action>
+                    <Action onClick={this.onSubmit}>
+                        <SuccessIcon/>
+                    </Action>
+                </EditActions>
+            </StyledEditForm>
+        );
+    }
+
+    public renderAddForm() {
+        const { onCancel, focusAfterRender } = this.props;
+        const { errors } = this.state;
+
+        return (
+            <StyledAddForm>
+                <div>
+                    <AddFormField>
+                        <b>Distance: </b>
+                        {this.renderInput('distance', focusAfterRender)}
+                        {errors.distance && <Error>{errors.distance}</Error>}
+                    </AddFormField>
+                    <AddFormField>
+                        <b>Time: </b>
+                        {this.renderInput('time')}
+                        {errors.time && <Error>{errors.time}</Error>}
+                    </AddFormField>
+                </div>
+                <AddFormActions>
+                    <Action onClick={onCancel}>
+                        <CancelIcon/></Action>
+                    <Action onClick={this.onSubmit}>
+                        <SuccessIcon/>
+                    </Action>
+                </AddFormActions>
+            </StyledAddForm>
         );
     }
 
     public render() {
-        const { id, onCancel } = this.props;
-        const { errors } = this.state;
+        const {id} = this.props;
 
-        if (id) {
-            return (
-                <StyledAddForm>
-                    <div>
-                        <Field>
-                            <b>Distance: </b>
-                            {this.renderInput('distance')}
-                            {errors.distance && <Error>{errors.distance}</Error>}
-                        </Field>
-                        <Field>
-                            <b>Time: </b>
-                            {this.renderInput('time')}
-                            {errors.time && <Error>{errors.time}</Error>}
-                        </Field>
-                    </div>
-                    <Actions>
-                        <Action src={cancel} onClick={onCancel} />
-                        <Action src={success} onClick={this.onSubmit} />
-                    </Actions>
-                </StyledAddForm>
-            );
-        }
-
-        return (
-            <StyledAddForm>
-                { id && <img src={icon} /> }
-                <Fields>
-                    <Field>
-                        Distance: <Input ref={this.inputRef} onChange={(event) => this.onChange(event, 'distance')} />
-                    </Field>
-                    <Field>
-                        Time: <Input onChange={(event) => this.onChange(event, 'time')} />
-                    </Field>
-                </Fields>
-                <Actions>
-                    <Action src={cancel} onClick={onCancel} />
-                    <Action src={success} onClick={this.onSubmit} />
-                </Actions>
-            </StyledAddForm>
-        );
+        return id ? this.renderEditForm() : this.renderAddForm();
     }
 }

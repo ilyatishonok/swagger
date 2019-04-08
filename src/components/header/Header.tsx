@@ -35,7 +35,6 @@ const HeaderBar = styled.header<{ isDropDownOpened: boolean; theme: any }>`
     z-index: 100;
     height: 2.7rem;
     padding: 1rem 1rem 1rem 0;
-    width: 100%;
 
     @media (max-width: 500px) {
         background-color: ${props => props.isDropDownOpened ? 'transparent' : props.theme.main };

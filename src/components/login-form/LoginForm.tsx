@@ -1,6 +1,5 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
-import bearIcon from './bear.svg';
+import styled from 'styled-components';
 import BearIcon from './icons/BearIcon';
 
 export interface LoginFormProps {

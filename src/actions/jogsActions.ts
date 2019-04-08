@@ -2,13 +2,13 @@ import { ThunkAction } from 'redux-thunk';
 import { Action } from 'redux';
 import { normalize } from 'normalizr';
 import { AxiosResponse } from 'axios';
-import { api } from '../api';
-import { jogsSchema, jogSchema } from '../schemas/jogs';
-import { mergeEntites } from '../actions/entitiesActions';
-import { setRequestStatus } from './requestsActions';
-import { JogsActionTypes } from '../enums/jogs';
-import { JogEntity } from '../reducers/entities/jogs';
-import { RootState } from '../reducers';
+import { api } from 'api';
+import { RootState } from 'reducers';
+import { jogsSchema, jogSchema } from 'schemas/jogs';
+import { mergeEntities } from 'actions/entitiesActions';
+import { setRequestStatus } from 'actions/requestsActions';
+import { JogsActionTypes } from 'enums/jogs';
+import { JogEntity } from 'reducers/entities/jogs';
 
 interface IFetchJogsResponse {
     response: {
@@ -34,6 +34,11 @@ interface FetchJogsFailureAction {
     payload: string;
 }
 
+interface AddJogAction {
+    type: JogsActionTypes.ADD_JOG;
+    payload: string;
+}
+
 interface SetStartDateAction {
     type: JogsActionTypes.SET_START_DATE;
     payload: Date | null;
@@ -43,23 +48,33 @@ interface SetEndDateAction {
     payload: Date | null;
 }
 
-export type JogsActions = FetchJogsRequestAction | FetchJogsFailureAction | FetchJogsSuccessAction | SetStartDateAction | SetEndDateAction;
+interface GoToNewPageAction {
+    type: JogsActionTypes.GO_TO_NEW_PAGE,
+}
 
-const fetchJogsRequest = () => ({
+export type JogsActions = FetchJogsRequestAction |
+    FetchJogsFailureAction |
+    FetchJogsSuccessAction |
+    SetStartDateAction |
+    SetEndDateAction |
+    AddJogAction |
+    GoToNewPageAction;
+
+const fetchJogsRequest = (): FetchJogsRequestAction => ({
     type: JogsActionTypes.FETCH_JOGS_REQUEST,
 });
 
-const fetchJogsSuccess = (result: string) => ({
+const fetchJogsSuccess = (result: string[]): FetchJogsSuccessAction => ({
     type: JogsActionTypes.FETCH_JOGS_SUCCESS,
     payload: result,
 });
 
-const fetchJogsFailure = (error: string) => ({
+const fetchJogsFailure = (error: string): FetchJogsFailureAction => ({
     type: JogsActionTypes.FETCH_JOGS_FAILURE,
     payload: error,
 });
 
-const addJogSuccess = (id: string) => ({
+const addJogSuccess = (id: string): AddJogAction => ({
     type: JogsActionTypes.ADD_JOG,
     payload: id,
 });
@@ -74,21 +89,32 @@ export const setEndDate = (endDate: Date | null): SetEndDateAction => ({
     payload: endDate,
 });
 
+export const goToNewPage = (): GoToNewPageAction => ({
+    type: JogsActionTypes.GO_TO_NEW_PAGE,
+});
+
 export const fetchJogs = (): ThunkAction<Promise<void>, RootState, void, Action> => {
     return async (dispatch) => {
-        dispatch(setRequestStatus('FETCH_JOGS', true));
-        dispatch(fetchJogsRequest());
+        try {
+            dispatch(fetchJogsRequest());
+            dispatch(setRequestStatus('FETCH_JOGS', true));
 
-        const response: AxiosResponse<IFetchJogsResponse> = await api.get('/data/sync');
+            const response: AxiosResponse<IFetchJogsResponse> = await api.get('/data/sync');
 
-        const reversedJogs = [...response.data.response.jogs].reverse();
-        const normalizedJogs = normalize(reversedJogs, jogsSchema);
+            const reversedJogs = [...response.data.response.jogs].reverse();
+            const normalizedJogs = normalize(reversedJogs, jogsSchema);
 
-        dispatch(mergeEntites(normalizedJogs.entities));
-        dispatch(setRequestStatus('FETCH_JOGS', false));
-        dispatch(fetchJogsSuccess(normalizedJogs.result));
+            //More server latency
+            setTimeout(() => {
+                dispatch(mergeEntities(normalizedJogs.entities));
+                dispatch(fetchJogsSuccess([]));
+                dispatch(setRequestStatus('FETCH_JOGS', false));
+            }, 1000);
+        } catch (error) {
+            //TODO Handle error;
+        }
     }
-}
+};
 
 export const addJog = (time: number, distance: number): ThunkAction<Promise<void>, RootState, void, Action> => {
     return async (dispatch) => {
@@ -102,11 +128,11 @@ export const addJog = (time: number, distance: number): ThunkAction<Promise<void
 
         const normalizedJog = normalize(response.data.response, jogSchema);
 
-        dispatch(mergeEntites(normalizedJog.entities));
-        dispatch(setRequestStatus('FETCH_JOGS', false));
+        dispatch(mergeEntities(normalizedJog.entities));
+        dispatch(setRequestStatus('ADD_JOGS', false));
         dispatch(addJogSuccess(response.data.response.id));
     }
-}
+};
 
 export const editJog = (id: string, time: number, distance: number): ThunkAction<Promise<void>, RootState, void, Action> => {
     return async (dispatch, getState) => {
@@ -124,7 +150,7 @@ export const editJog = (id: string, time: number, distance: number): ThunkAction
 
         const normalizedJog = normalize(response.data.response, jogSchema);
 
-        dispatch(mergeEntites(normalizedJog.entities));
+        dispatch(mergeEntities(normalizedJog.entities));
         dispatch(setRequestStatus(`EDIT_JOG_${oldJog.id}`, false));
     }
-}
+};

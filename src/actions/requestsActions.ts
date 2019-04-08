@@ -1,4 +1,4 @@
-import { RequestsActionTypes } from '../enums/requests';
+import { RequestsActionTypes } from 'enums/requests';
 
 export interface SetRequestStatusAction {
     type: RequestsActionTypes.SET_REQUEST_STATUS;

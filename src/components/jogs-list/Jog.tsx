@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import icon from './icon.svg';
-import JogForm from '../jog-form';
-import { JogEntity } from '../../reducers/entities/jogs';
+import JogForm from 'components/jog-form';
+import { JogEntity } from 'reducers/entities/jogs';
 
 export interface IJogProps {
     jog: JogEntity;
@@ -35,7 +34,7 @@ const JogAttribute = styled.div`
     margin-top: 0.5rem;
 `;
 
-const renderAttributes = (jog: JogEntity) => (
+const renderEditableAttributes = (jog: JogEntity) => (
     <>
         <JogAttribute><b>Distance:</b> {jog.distance}</JogAttribute>
         <JogAttribute><b>Time:</b> {jog.time}</JogAttribute>
@@ -47,12 +46,16 @@ const Jog = React.memo((props: IJogProps) => {
 
     return (
         <JogContainer>
-            <img onClick={() => setEditState(!isEdit)} src={icon} />
+            <img onClick={() => setEditState(true)} src="/jog.svg" />
             <JogInfo>
-                <JogAttribute>{new Date(props.jog.date).toDateString()}</JogAttribute>
+                <JogAttribute>{new Date(props.jog.date * 1000).toDateString()}</JogAttribute>
                 { isEdit ?
-                    <JogForm onSuccess={() => setEditState(!isEdit)} id={props.jog.id} onCancel={() => setEditState(!isEdit)} /> :
-                    renderAttributes(props.jog)
+                    <JogForm
+                        id={props.jog.id}
+                        onSuccess={() => setEditState(false)}
+                        onCancel={() => setEditState(false)}
+                    />
+                    : renderEditableAttributes(props.jog)
                 }
             </JogInfo>
         </JogContainer>

@@ -12,12 +12,13 @@ export interface IFilterProps {
     setEndDate: (endDate: Date | null) => void;
 }
 
-const FilterArea = styled.div`
+const FiltersArea = styled.div`
     position: sticky;
     top: 4.7rem;
     display: flex;
+    padding: 0.5rem;
     background: #eaeaea;
-    height: 2rem;
+    min-height: 2rem;
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -27,21 +28,44 @@ const FilterArea = styled.div`
     }
 `;
 
+const FilterArea = styled.div`
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
+    
+    @media (max-width: 500px) {
+        margin-right: 0;
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+`;
+
+const FilterDatePicker = styled(DatePicker)`
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+    outline: none;
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+`;
+
 const Filter = (props: IFilterProps) => (
-    <FilterArea>
-        Date from: 
-            <DatePicker
-                selected={props.filters.startDate}
-                onChange={(date) => props.setStartDate(date)}
-                dateFormat="MM/dd/yyyy"
-            />
-        Date to:
-            <DatePicker
-                selected={props.filters.endDate}
-                onChange={(date) => props.setEndDate(date)}
-                dateFormat="MM/dd/yyyy"
-            />
-    </FilterArea>
+    <FiltersArea>
+        <FilterArea>
+            <b>Date from:</b>
+                <FilterDatePicker
+                    selected={props.filters.startDate}
+                    onChange={(date) => props.setStartDate(date)}
+                    dateFormat="MM/dd/yyyy"
+                />
+        </FilterArea>
+        <FilterArea>
+            <b>Date to:</b>
+                <FilterDatePicker
+                    selected={props.filters.endDate}
+                    onChange={(date) => props.setEndDate(date)}
+                    dateFormat="MM/dd/yyyy"
+                />
+        </FilterArea>
+    </FiltersArea>
 );
 
 export default Filter;

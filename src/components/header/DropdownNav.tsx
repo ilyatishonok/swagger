@@ -1,15 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
 import { withRouter, RouteComponentProps } from "react-router";
 import { NavLink } from "react-router-dom";
-import styled from 'styled-components';
 
 export interface IDropdownNavProps {
-    navigationElements: [{
+    navigationElements: {
         title: string;
         route: string;
-    }];
+    }[];
     isOpened: boolean;
-    onDropdownClose: () => void;
+    onClose: () => void;
 }
 
 const DropdownArea = styled.div<{ isVisible: boolean }>`

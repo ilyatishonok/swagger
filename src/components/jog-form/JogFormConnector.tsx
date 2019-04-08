@@ -1,28 +1,21 @@
 import { connect } from 'react-redux';
-import { RootState } from '../../reducers';
-import { editJog, addJog } from '../../actions/jogsActions';
-import JogForm, { IJogsAddFormProps, IFormFields } from './JogForm';
-import { JogEntity } from '../../reducers/entities/jogs';
+import { RootState } from 'reducers';
+import { editJog, addJog } from 'actions/jogsActions';
+import JogForm, { IJogFormOwnProps, IJogFormDispatchProps, IJogFormStoreProps } from './JogForm';
 import { ThunkDispatch } from 'redux-thunk';
 import { Action } from 'redux';
 
-export type IJogFormStateProps = {
-    initialValues: Partial<IFormFields>;
-} | undefined;
-
-export interface IJogFormDispatchProps {
-    onSubmit: (time: number, distance: number) => Promise<void>
-}
-
-const mapStateToProps = (state: RootState, props: IJogsAddFormProps) => {
+const mapStateToProps = (state: RootState, props: IJogFormOwnProps): IJogFormStoreProps => {
     if (props.id) {
         return {
             initialValues: state.entities.jogs[props.id],
         };
     }
-}
 
-const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, void, Action>, ownProps: IJogsAddFormProps) => ({
+    return {};
+};
+
+const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, void, Action>, ownProps: IJogFormOwnProps): IJogFormDispatchProps => ({
     onSubmit: (time: number, distance: number) => {
         return ownProps.id ? 
             dispatch(editJog(ownProps.id, time, distance)) :
@@ -30,4 +23,4 @@ const mapDispatchToProps = (dispatch: ThunkDispatch<RootState, void, Action>, ow
     }
 });
 
-export default connect<IJogFormStateProps, IJogFormDispatchProps, IJogsAddFormProps, RootState>(mapStateToProps, mapDispatchToProps)(JogForm);
+export default connect<IJogFormStoreProps, IJogFormDispatchProps, IJogFormOwnProps, RootState>(mapStateToProps, mapDispatchToProps)(JogForm);

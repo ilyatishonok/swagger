@@ -1,6 +1,5 @@
-import merge from 'lodash/fp/merge';
-import { NormalizedEntity } from './entities';
-import { EntitesActions } from '../../actions/entitiesActions';
+import { NormalizedEntity } from 'reducers/entities';
+import { EntitiesActions } from 'actions/entitiesActions';
 
 export interface JogEntity {
     id: string;
@@ -10,7 +9,7 @@ export interface JogEntity {
     date: number;
 }
 
-const jogEntityReducer = (state: NormalizedEntity<JogEntity> = {}, action: EntitesActions) => {
+const jogEntityReducer = (state: NormalizedEntity<JogEntity> = {}, action: EntitiesActions) => {
     switch (action.type) {
         default:
             if (action.entities && action.entities.jogs) {
@@ -22,6 +21,6 @@ const jogEntityReducer = (state: NormalizedEntity<JogEntity> = {}, action: Entit
             
             return state;
     }
-}
+};
 
 export default jogEntityReducer;

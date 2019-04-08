@@ -1,9 +1,7 @@
 import { ThunkAction } from 'redux-thunk';
-import { Action } from 'redux';
-import { AxiosResponse } from 'axios';
-import { api } from '../api';
-import { RootState } from '../reducers';
-import { AppActionTypes, AppStates } from '../enums/app';
+import { api } from 'api';
+import { RootState } from 'reducers';
+import { AppActionTypes, AppStates } from 'enums/app';
 
 export interface SetAppStateAction {
     type: AppActionTypes.SET_APP_STATE;
@@ -27,21 +25,26 @@ export const setUserAuthenticationStatus = (status: boolean): SetUserAuthenticat
     payload: status,
 });
 
-export const loadApp = (): ThunkAction<void, RootState, void, Action> => {
+export const loadApp = (): ThunkAction<void, RootState, void, AppActions> => {
     return async (dispatch) => {
-        dispatch(setAppState(AppStates.APP_INITIALIZING));
+        try {
+            dispatch(setAppState(AppStates.APP_INITIALIZING));
 
-        if (!localStorage.getItem('access_token')) {
-            dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
+            if (!localStorage.getItem('access_token')) {
+                dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
 
-            return;
+                return;
+            }
+
+            await api.get('/auth/user');
+
+            //More server latency
+            setTimeout(() => {
+                dispatch(setUserAuthenticationStatus(true));
+                dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
+            }, 1000);
+        } catch(error) {
+            //TODO Handle error
         }
-
-        const response: AxiosResponse = await api.get('/auth/user');
-
-        setTimeout(() => {
-            dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
-            dispatch(setUserAuthenticationStatus(true));
-        }, 2000);
     }
-}
+};

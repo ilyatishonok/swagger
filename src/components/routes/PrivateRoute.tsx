@@ -26,6 +26,6 @@ const PrivateRoute = (props: AuthRouteProps) => {
             }} 
         />
     )
-}
+};
 
 export default PrivateRoute;

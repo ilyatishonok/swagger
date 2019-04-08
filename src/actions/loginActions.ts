@@ -1,32 +1,37 @@
 import { ThunkAction } from 'redux-thunk';
 import { AxiosResponse } from 'axios';
-import { api } from '../api';
+import { api } from 'api';
 import history from '../history';
-import { RootState } from '../reducers';
-import { AppStates } from '../enums/app';
-import { setUserAuthenticationStatus, setAppState, AppActions } from './appActions';
-import { setRequestStatus, RequestsActions } from './requestsActions';
+import { RootState } from 'reducers';
+import { AppStates } from 'enums/app';
+import { setUserAuthenticationStatus, setAppState, AppActions } from 'actions/appActions';
+import { setRequestStatus, RequestsActions } from 'actions/requestsActions';
 
 export interface LoginUserResponse {
     response: {
         access_token: string;
-    }
+    };
 }
 
 export const login = (): ThunkAction<void, RootState, void, AppActions | RequestsActions> => {
-    return async (dispatch) => { 
-        dispatch(setRequestStatus(`LOGIN`, true));       
-        const response: AxiosResponse<LoginUserResponse> = await api.post('auth/uuidLogin', {
-            uuid: 'hello',
-        });
+    return async (dispatch) => {
+        try {
+            dispatch(setRequestStatus(`LOGIN`, true));
 
-        localStorage.setItem('access_token', response.data.response.access_token);
+            const response: AxiosResponse<LoginUserResponse> = await api.post('auth/uuidLogin', {
+                uuid: 'hello',
+            });
 
-        dispatch(setUserAuthenticationStatus(true));
-        dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
+            localStorage.setItem('access_token', response.data.response.access_token);
 
-        dispatch(setRequestStatus(`LOGIN`, false));
+            dispatch(setUserAuthenticationStatus(true));
+            dispatch(setAppState(AppStates.APP_SUCCESS_INITIALIZED));
 
-        history.push('/');
+            dispatch(setRequestStatus(`LOGIN`, false));
+
+            history.push('/');
+        } catch(error) {
+            //TODO Handle error
+        }
     }
-}
+};

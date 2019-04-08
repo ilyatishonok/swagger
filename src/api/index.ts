@@ -1,13 +1,4 @@
-import axios  from 'axios';
-import store from '../store';
-
-axios.interceptors.response.use(undefined, (error) => {
-    if (error.response === 401) {
-        localStorage.removeItem('access_token');
-    }
-
-    return Promise.reject(error);
-});
+import axios from 'axios';
 
 export const api = axios.create({
     baseURL: 'https://jogtracker.herokuapp.com/api/v1/',
@@ -15,6 +6,7 @@ export const api = axios.create({
 
 api.interceptors.response.use(undefined, (error) => {
     if (error.response === 401) {
+        //Todo redirect and logot.
         localStorage.removeItem('access_token');
     }
 
@@ -31,4 +23,4 @@ api.interceptors.request.use(config => {
     }
 
     return config;
-})
+});

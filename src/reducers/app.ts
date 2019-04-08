@@ -1,5 +1,5 @@
-import { AppActionTypes, AppStates } from '../enums/app';
-import { AppActions } from '../actions/appActions';
+import { AppActionTypes, AppStates } from 'enums/app';
+import { AppActions } from 'actions/appActions';
 
 export interface AppState {
     appCode: AppStates;
@@ -9,7 +9,7 @@ export interface AppState {
 const initialState = {
     appCode: 0,
     isAuthenticated: false,
-}
+};
 
 const appReducer = (state: AppState = initialState, action: AppActions) => {
     switch (action.type) {
@@ -20,6 +20,6 @@ const appReducer = (state: AppState = initialState, action: AppActions) => {
         default:
             return state;
     }
-}
+};
 
 export default appReducer;

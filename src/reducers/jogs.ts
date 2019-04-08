@@ -1,11 +1,11 @@
-import { JogsActionTypes } from '../enums/jogs';
-import { JogEntity } from './entities/jogs';
-import { JogsActions } from '../actions/jogsActions';
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
+import {JogsActionTypes} from 'enums/jogs';
+import {JogsActions} from 'actions/jogsActions';
 
 interface JogsByIdState {
     data: string[];
     page: number;
+    didInvalidate: boolean;
     error?: string;
 }
 
@@ -22,6 +22,7 @@ export interface JogsState {
 const jogsByIdInitialState = {
     data: [],
     page: 1,
+    didInvalidate: true,
 };
 
 const filterInitialState = {
@@ -32,14 +33,21 @@ const filterInitialState = {
 const jogsByIdReducer = (state: JogsByIdState = jogsByIdInitialState, action: JogsActions) => {
     switch (action.type) {
         case JogsActionTypes.FETCH_JOGS_REQUEST:
-            return { ...state, error: undefined };
+            return { ...state, error: undefined, didInvalidate: false, };
         case JogsActionTypes.FETCH_JOGS_SUCCESS:
             return { ...state, data: action.payload };
         case JogsActionTypes.FETCH_JOGS_FAILURE:
             return { ...state, error: action.payload };
+        case JogsActionTypes.SET_START_DATE:
+            return { ...state, page: 1 };
+        case JogsActionTypes.SET_END_DATE:
+            return { ...state, page: 1 };
+        case JogsActionTypes.GO_TO_NEW_PAGE:
+            return { ...state, page: state.page + 1 };
         case JogsActionTypes.ADD_JOG:
-            return { 
-                ...state, 
+            return {
+                ...state,
+                didInvalidate: false,
                 data: [action.payload, ...state.data],
             };
         default:
@@ -56,7 +64,7 @@ const filtersReducer = (state: FiltersState = filterInitialState, action: JogsAc
         default:
             return state;
     }
-}
+};
 
 export default combineReducers({
     jogsById: jogsByIdReducer,

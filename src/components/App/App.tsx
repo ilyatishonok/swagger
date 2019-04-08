@@ -3,21 +3,18 @@ import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { ThemeProvider, createGlobalStyle } from 'styled-components';
 import history from '../../history';
-import store from '../../store';
-import Routes from '../routes';
+import store from 'store';
+import Routes from 'components/routes';
 
 const GlobalStyle = createGlobalStyle`
     html, body {
         margin: 0;
         padding: 0;
-    }
-
-    html {
-        overflow-y: scroll;
+        box-sizing: border-box;
     }
 
     #root {
-        header: 100%;
+        box-sizing: inherit
         display: flex;
         flex-direction: column;
     }
@@ -26,6 +23,8 @@ const GlobalStyle = createGlobalStyle`
 const theme = {
     main: '#7ed321',
     primary: '#e990f9',
+    white: '#fffff',
+    black: '#00000',
 };
 
 const App = () => (

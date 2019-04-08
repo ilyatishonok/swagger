@@ -30,7 +30,7 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "styled-components": "^4.2.0",
-    "typescript": "^3.4.1"
+    "typescript": "^3.3.9"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,20 +1,34 @@
 import React, { useEffect } from 'react';
+import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import { Switch } from 'react-router-dom';
-import { AppStates } from '../../enums/app';
+import { AppStates } from 'enums/app';
+import Header from 'components/header';
+import LoginPage from 'components/pages/login-page';
+import JogsPage from 'components/pages/jogs-page';
+import InfoPage from "components/pages/info-page";
+import NotFoundPage from "components/pages/not-fount-page";
 import PrivateRoute from './PrivateRoute';
-import Header from '../header';
-import LoginPage from '../pages/login-page';
 import infinity from './infinity.svg';
-import JogsPage from '../pages/jogs-page';
 
 export interface IRoutesProps {
     appCode: AppStates;
     loadApp: () => void;
 }
 
-const Loading = styled.img`
-    margin: auto;
+const Loading = styled.img``;
+
+const LoadingContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
 `;
 
 const Routes = (props: IRoutesProps) => {
@@ -24,11 +38,13 @@ const Routes = (props: IRoutesProps) => {
         if (appCode === AppStates.APP_UNINITIALIZED) {
             loadApp();
         }
-    })
+    });
 
     if (appCode === AppStates.APP_UNINITIALIZED || appCode === AppStates.APP_INITIALIZING) {
         return (
-            <Loading src={infinity} />
+            <LoadingContainer>
+                <Loading src={process.env.PUBLIC_URL + 'infinity.svg'} />
+            </LoadingContainer>
         );
     }
 
@@ -36,11 +52,13 @@ const Routes = (props: IRoutesProps) => {
         <>
             <Header />
             <Switch>
-                <PrivateRoute path="/login" component={LoginPage} isInverted />
                 <PrivateRoute exact path="/" component={JogsPage} />
+                <PrivateRoute path="/login" component={LoginPage} isInverted />
+                <PrivateRoute path="/info" component={InfoPage} />
+                <Route path="*" component={NotFoundPage} />
             </Switch>
         </>
     );
-}
+};
 
 export default Routes;

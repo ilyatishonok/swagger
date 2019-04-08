@@ -5,4 +5,5 @@ export enum JogsActionTypes {
     ADD_JOG = '@@jogs/ADD_JOG',
     SET_START_DATE = '@@jogs/SET_START_DATE',
     SET_END_DATE = '@@jogs/SET_END_DATE',
-};
+    GO_TO_NEW_PAGE = '@@jogs/GO_TO_NEW_PAGE',
+}
