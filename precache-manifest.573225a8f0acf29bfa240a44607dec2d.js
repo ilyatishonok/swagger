@@ -4,8 +4,8 @@ self.__precacheManifest = [
     "url": "/swagger/static/js/runtime~main.9ad01a72.js"
   },
   {
-    "revision": "4563576c97b5330437dd",
-    "url": "/swagger/static/js/main.dfe43b4a.chunk.js"
+    "revision": "47f2cc822b049c24ea34",
+    "url": "/swagger/static/js/main.9e4c24c1.chunk.js"
   },
   {
     "revision": "005d85d9174c0bc4b9cf",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/swagger/static/css/2.349a6628.chunk.css"
   },
   {
-    "revision": "389ed74a1d62a141a517f3414b11fd6f",
+    "revision": "f0038829a888771efab2374c47af8d61",
     "url": "/swagger/index.html"
   }
 ];
