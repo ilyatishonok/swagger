@@ -6,7 +6,7 @@ export const api = axios.create({
 
 api.interceptors.response.use(undefined, (error) => {
     if (error.response === 401) {
-        //Todo redirect and logot.
+        //Todo redirect and logout.
         localStorage.removeItem('access_token');
     }
 

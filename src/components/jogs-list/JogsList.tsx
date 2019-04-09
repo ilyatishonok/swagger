@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { ITheme } from "theme";
 import Jog from './Jog';
 import JogsAddForm from 'components/jog-form';
 import { JogEntity } from 'reducers/entities/jogs';
@@ -21,6 +22,10 @@ const JogsContainer = styled.ul`
     margin: 0;
     flex-direction: column;
     align-items: center;
+    
+    @media (max-width: 500px) {
+        width: 100%;
+    }
 `;
 
 const AddJogButton = styled.div<{ visible?: boolean }>`
@@ -40,12 +45,12 @@ const WithoutJogs = styled.div`
 
 const TextMessage = styled.h3`
     color: gray;
-    text-align: center
+    text-align: center;
 `;
 
-const LoadMoreButton = styled.button<{ visible?: boolean, theme: any }>`
+const LoadMoreButton = styled.button<{ visible?: boolean, theme: ITheme }>`
     display: ${ props => props.visible ? 'block' : 'none' };
-    background: white;
+    background: ${ props => props.theme.white };
     width: 100%;
     height: 2rem;
     margin-top: 2rem;
@@ -58,7 +63,7 @@ const LoadMoreButton = styled.button<{ visible?: boolean, theme: any }>`
     
     &:hover {
         background: ${ props => props.theme.primary };
-        color: white;
+        color: ${ props => props.theme.white };;
     }
 `;
 
@@ -66,7 +71,6 @@ const JogsList = React.memo((props: IJogsListProps) => {
     const {
         isFetching,
         didInvalidate,
-        error,
         jogs,
         fetchJogs,
         loadMore,
@@ -85,11 +89,11 @@ const JogsList = React.memo((props: IJogsListProps) => {
     }
 
     if (isFetching) {
-        return <img src={process.env.PUBLIC_URL + 'infinity.svg'} />
+        return <img src={process.env.PUBLIC_URL + '/infinity.svg'} />
     }
 
     return (
-        <div>
+        <>
             <JogsContainer>
                 {isModalOpen &&
                         <JogsAddForm
@@ -99,7 +103,7 @@ const JogsList = React.memo((props: IJogsListProps) => {
                 }
                 {(!isModalOpen && !jogs.length) &&
                     <WithoutJogs>
-                        <img src={process.env.PUBLIC_URL + 'sad.svg'} />
+                        <img src={process.env.PUBLIC_URL + '/sad.svg'} />
                         <TextMessage>Hmm...where are jogs? Click to green plus button to add it</TextMessage>
                     </WithoutJogs>
                 }
@@ -109,9 +113,9 @@ const JogsList = React.memo((props: IJogsListProps) => {
                 Load More
             </LoadMoreButton>
             <AddJogButton visible={!isModalOpen} onClick={() => setModalState(true)}>
-                <img src={process.env.PUBLIC_URL + 'add.svg'} />
+                <img src={process.env.PUBLIC_URL + '/add.svg'} />
             </AddJogButton>
-        </div>
+        </>
     );
 });
 

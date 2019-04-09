@@ -9,7 +9,6 @@ import JogsPage from 'components/pages/jogs-page';
 import InfoPage from "components/pages/info-page";
 import NotFoundPage from "components/pages/not-fount-page";
 import PrivateRoute from './PrivateRoute';
-import infinity from './infinity.svg';
 
 export interface IRoutesProps {
     appCode: AppStates;
@@ -43,7 +42,7 @@ const Routes = (props: IRoutesProps) => {
     if (appCode === AppStates.APP_UNINITIALIZED || appCode === AppStates.APP_INITIALIZING) {
         return (
             <LoadingContainer>
-                <Loading src={process.env.PUBLIC_URL + 'infinity.svg'} />
+                <Loading src={process.env.PUBLIC_URL + '/infinity.svg'} />
             </LoadingContainer>
         );
     }
@@ -52,9 +51,9 @@ const Routes = (props: IRoutesProps) => {
         <>
             <Header />
             <Switch>
-                <PrivateRoute exact path="/" component={JogsPage} />
-                <PrivateRoute path="/login" component={LoginPage} isInverted />
-                <PrivateRoute path="/info" component={InfoPage} />
+                <PrivateRoute exact path={process.env.PUBLIC_URL + '/'} component={JogsPage} />
+                <PrivateRoute path={process.env.PUBLIC_URL + '/login'} component={LoginPage} isInverted />
+                <PrivateRoute path={process.env.PUBLIC_URL + '/info'} component={InfoPage} />
                 <Route path="*" component={NotFoundPage} />
             </Switch>
         </>

@@ -118,39 +118,47 @@ export const fetchJogs = (): ThunkAction<Promise<void>, RootState, void, Action>
 
 export const addJog = (time: number, distance: number): ThunkAction<Promise<void>, RootState, void, Action> => {
     return async (dispatch) => {
-        dispatch(setRequestStatus('ADD_JOG', true));
-        
-        const response: AxiosResponse<IAddJogResponse> = await api.post('/data/jog', {
-            time,
-            distance,
-            date: new Date(),
-        });
+        try {
+            dispatch(setRequestStatus('ADD_JOG', true));
 
-        const normalizedJog = normalize(response.data.response, jogSchema);
+            const response: AxiosResponse<IAddJogResponse> = await api.post('/data/jog', {
+                time,
+                distance,
+                date: new Date().toTimeString(),
+            });
 
-        dispatch(mergeEntities(normalizedJog.entities));
-        dispatch(setRequestStatus('ADD_JOGS', false));
-        dispatch(addJogSuccess(response.data.response.id));
+            const normalizedJog = normalize(response.data.response, jogSchema);
+
+            dispatch(mergeEntities(normalizedJog.entities));
+            dispatch(addJogSuccess(response.data.response.id));
+            dispatch(setRequestStatus('ADD_JOGS', false));
+        } catch(error) {
+            //TODO Handle error
+        }
     }
 };
 
 export const editJog = (id: string, time: number, distance: number): ThunkAction<Promise<void>, RootState, void, Action> => {
     return async (dispatch, getState) => {
-        const oldJog = getState().entities.jogs[id];
+        try {
+            const oldJog = getState().entities.jogs[id];
 
-        dispatch(setRequestStatus(`EDIT_JOG_${oldJog.id}`, true));
+            dispatch(setRequestStatus(`EDIT_JOG_${oldJog.id}`, true));
 
-        const response: AxiosResponse<IAddJogResponse> = await api.put('/data/jog', {
-            time,
-            distance,
-            date: new Date(),
-            jog_id: oldJog.id,
-            user_id: oldJog.user_id,
-        });
+            const response: AxiosResponse<IAddJogResponse> = await api.put('/data/jog', {
+                time,
+                distance,
+                date: new Date(oldJog.date).toTimeString(),
+                jog_id: oldJog.id,
+                user_id: oldJog.user_id,
+            });
 
-        const normalizedJog = normalize(response.data.response, jogSchema);
+            const normalizedJog = normalize(response.data.response, jogSchema);
 
-        dispatch(mergeEntities(normalizedJog.entities));
-        dispatch(setRequestStatus(`EDIT_JOG_${oldJog.id}`, false));
+            dispatch(mergeEntities(normalizedJog.entities));
+            dispatch(setRequestStatus(`EDIT_JOG_${oldJog.id}`, false));
+        } catch(error) {
+            //TODO Handle error
+        }
     }
 };

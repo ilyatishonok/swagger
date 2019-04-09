@@ -16,6 +16,9 @@ const JogContainer = styled.li`
     @media (max-width: 500px) {
         width: 100%;
         flex-direction: column;
+        
+        padding-bottom: 1rem;
+        border-bottom: 0.1rem solid ${ props => props.theme.black };
     }
 `;
 
@@ -43,12 +46,14 @@ const renderEditableAttributes = (jog: JogEntity) => (
 
 const Jog = React.memo((props: IJogProps) => {
     const [isEdit, setEditState ] = useState(false);
+    const jogDate = props.jog.date;
+    const date = isNaN(jogDate) ? jogDate : jogDate * 1000;
 
     return (
         <JogContainer>
-            <img onClick={() => setEditState(true)} src="/jog.svg" />
+            <img onClick={() => setEditState(true)} src={process.env.PUBLIC_URL + '/jog.svg'} />
             <JogInfo>
-                <JogAttribute>{new Date(props.jog.date * 1000).toDateString()}</JogAttribute>
+                <JogAttribute>{new Date(date).toDateString()}</JogAttribute>
                 { isEdit ?
                     <JogForm
                         id={props.jog.id}

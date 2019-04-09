@@ -1,15 +1,15 @@
 import { connect } from 'react-redux';
 import Filter from './Filter';
-import { setEndDate, setStartDate } from '../../actions/jogsActions';
-import { RootState } from '../../reducers';
+import { setEndDate, setStartDate } from 'actions/jogsActions';
+import { RootState } from 'reducers';
 
 const mapStateToProps = (state: RootState) => ({
     filters: state.jogs.filters,
 });
 
-const mapDispathToProps = {
+const mapDispatchToProps = {
     setStartDate,
     setEndDate,
-}
+};
 
-export default connect(mapStateToProps, mapDispathToProps)(Filter);
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);

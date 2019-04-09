@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledBearIcon = styled.svg`
-    fill: #fff;
+    fill: ${ props => props.theme.white };;
 
     @media (max-width: 500px) {
         fill: ${ props => props.theme.primary };

@@ -7,13 +7,13 @@ const Page = styled.div`
 `;
 
 const TextMessage = styled.h3`
-    color: gray;
+    color: ${ props => props.theme.gray };;
     text-align: center
 `;
 
 const NotFoundPage = () => (
     <Page>
-        <img src={process.env.PUBLIC_URL + 'sad.svg'} />
+        <img src={process.env.PUBLIC_URL + '/sad.svg'} />
         <TextMessage>Nothing is here</TextMessage>
     </Page>
 );

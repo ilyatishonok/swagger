@@ -22,7 +22,7 @@ const LoginContainer = styled.div`
         margin: 0;
         width: 100%;
         padding: 0;
-        background-color: white;
+        background-color: ${ props => props.theme.white };;
         align-items: center;
         justify-content: space-around;
     }
@@ -30,12 +30,13 @@ const LoginContainer = styled.div`
 
 const LetMeInButton = styled.button`
     margin-top: 3rem;
-    background-color: transparent;
+    background-color: ${ props => props.theme.transparent };;
     border-radius: 1.5rem;
     cursor: pointer;
+    outline: none;
     padding: 0.7rem;
-    color: white;
-    border: 0.2rem solid white;
+    color: ${ props => props.theme.white };
+    border: 0.2rem solid ${ props => props.theme.white };;
 
     @media (max-width: 500px) {
         width: 90%;
@@ -44,7 +45,8 @@ const LetMeInButton = styled.button`
     }
 
     &:hover {
-        background-color: ${ props => props.theme.main };
+        background-color: ${ props => props.theme.primary };
+        color: ${ props => props.theme.white };
     }
 `;
 

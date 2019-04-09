@@ -1,31 +1,32 @@
 import React from 'react';
 import { withRouter, RouteComponentProps } from "react-router";
 import styled, { createGlobalStyle } from 'styled-components';
+import { ITheme } from "theme";
 import FilterIcon from './icons/FilterIcon';
 import LogoIcon from './icons/LogoIcon';
 import DropdownNav from './DropdownNav';
 import HamburgerIcon from './icons/HamburgerIcon';
 import Filter from './FilterConnector';
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export interface IHeaderProps {
     isAuthenticated: boolean;
 }
 
 export interface IHeaderState {
-    isFilterEnabled: boolean;
+    isFilterVisible: boolean;
     isDropdownOpened: boolean;
 }
 
-const GlobalStyle = createGlobalStyle<{ isModalOpen: boolean}>`
+const GlobalStyle = createGlobalStyle<{ hideScroll: boolean}>`
     @media (max-width: 500px) {
         body {
-            overflow: ${props => props.isModalOpen ? 'hidden' : 'auto' };
+            overflow: ${props => props.hideScroll ? 'hidden' : 'auto' };
         }
     }
 `;
 
-const HeaderBar = styled.header<{ isDropDownOpened: boolean; theme: any }>`
+const HeaderBar = styled.header<{ isDropDownOpened: boolean; theme: ITheme }>`
     display: flex;
     top: 0;
     position: sticky;
@@ -45,13 +46,14 @@ const ActionBar = styled.div`
     display: flex;
     align-items: center;
 `;
+
 const NavigationLink = styled.li<{ selected?: boolean }>`
     margin-left: 0.5rem;
     margin-right: 1rem;
     font-size: ${ props => props.selected ? '0.9rem' : '0.7rem' }
     cursor: pointer;
     
-    & > {
+    & > a {
         color: ${ props => props.selected ? 'black' : 'white' }
         text-decoration: none;
     }
@@ -70,66 +72,74 @@ const Navigation = styled.ul`
 const navigations = [
     {
         title: 'Jogs',
-        route: '/',
+        route: `${process.env.PUBLIC_URL}/`,
     },
     {
         title: 'Info',
-        route: '/info',
+        route: `${process.env.PUBLIC_URL}/info`,
     },
     {
         title: 'Contact us',
-        route: '/contactus',
+        route: `${process.env.PUBLIC_URL}/contactus`,
     },
 ];
 
 class Header extends React.Component<IHeaderProps & RouteComponentProps, IHeaderState> {
     state = {
-        isFilterEnabled: false,
+        isFilterVisible: false,
         isDropdownOpened: false,
     };
 
-    private openDropdown = () => {
+    private setDropdownState = () => {
         this.setState((state) => ({
             isDropdownOpened: !state.isDropdownOpened,
         }));
     }
 
-    private onCloseDropDown = () => {
-        this.setState({
-            isDropdownOpened: false,
-        });
+    private setFilterState = () => {
+        this.setState((state) => ({
+            isFilterVisible: !state.isFilterVisible,
+        }));
     }
 
     public renderActionBar() {
+        const { isFilterVisible, isDropdownOpened } = this.state;
+
         return (
-                <ActionBar>
-                    <Navigation>
-                        {navigations.map(({ title, route }) => (
-                            <NavigationLink selected={this.props.location.pathname === route} key={title}>
-                                <NavLink to={route}>{title}</NavLink>
-                            </NavigationLink>
-                        ))}
-                    </Navigation>
-                    <FilterIcon isActive={this.state.isFilterEnabled} onClick={() => {
-                        this.setState((state) => ({
-                            isFilterEnabled: !state.isFilterEnabled,
-                        }));
-                    }} hide={this.state.isDropdownOpened} />
-                    <HamburgerIcon isOpened={this.state.isDropdownOpened} onClick={this.openDropdown} />
-                </ActionBar>
+            <ActionBar>
+                <Navigation>
+                    {navigations.map(({ title, route }) => (
+                        <NavigationLink selected={this.props.location.pathname === route} key={title}>
+                            <NavLink to={route}>{title}</NavLink>
+                        </NavigationLink>
+                    ))}
+                </Navigation>
+                {!isDropdownOpened && <FilterIcon isActive={isFilterVisible} onClick={this.setFilterState} />}
+                <HamburgerIcon isActive={isDropdownOpened} onClick={this.setDropdownState} />
+            </ActionBar>
         );
     }
 
     public render() {
+        const { isDropdownOpened, isFilterVisible } = this.state;
+        const { isAuthenticated, location } = this.props;
+
         return (
             <>
-                <GlobalStyle isModalOpen={this.state.isDropdownOpened} />
-                <HeaderBar isDropDownOpened={this.state.isDropdownOpened}>
-                    <LogoIcon reverse={this.state.isDropdownOpened} />
-                    {this.props.isAuthenticated && this.renderActionBar()}
+                <GlobalStyle hideScroll={isDropdownOpened} />
+                <HeaderBar isDropDownOpened={isDropdownOpened}>
+                    <LogoIcon reverse={isDropdownOpened} />
+                    {isAuthenticated && this.renderActionBar()}
                 </HeaderBar>
-                { this.state.isFilterEnabled && <Filter />}
-                <DropdownNav onClose={this.onCloseDropDown} navigationElements={navigations} isOpened={this.state.isDropdownOpened} />
+                {isFilterVisible && <Filter />}
+                <DropdownNav
+                    pathname={location.pathname}
+                    isOpened={isDropdownOpened}
+                    onClose={() => this.setState({
+                        isDropdownOpened: false,
+                    })}
+                    navigationElements={navigations}
+                />
             </>
         );
     }

@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ITheme } from "theme";
 
 export interface ILogoProps {
     reverse?: boolean;
 }
 
-const StyledLogo = styled.svg<ILogoProps & { theme: any }>`
+const StyledLogo = styled.svg<ILogoProps & { theme: ITheme }>`
     fill: #fff;
 
     @media (max-width: 500px) {

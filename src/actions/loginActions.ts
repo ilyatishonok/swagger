@@ -1,7 +1,7 @@
 import { ThunkAction } from 'redux-thunk';
 import { AxiosResponse } from 'axios';
 import { api } from 'api';
-import history from '../history';
+import history from 'browser-history';
 import { RootState } from 'reducers';
 import { AppStates } from 'enums/app';
 import { setUserAuthenticationStatus, setAppState, AppActions } from 'actions/appActions';
@@ -29,7 +29,7 @@ export const login = (): ThunkAction<void, RootState, void, AppActions | Request
 
             dispatch(setRequestStatus(`LOGIN`, false));
 
-            history.push('/');
+            history.push(`${process.env.PUBLIC_URL}/`);
         } catch(error) {
             //TODO Handle error
         }
