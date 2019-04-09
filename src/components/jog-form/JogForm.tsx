@@ -33,6 +33,7 @@ export type IJogsAddFormProps = IJogFormDispatchProps & IJogFormOwnProps & IJogF
 
 export interface IJogsAddFormState {
     fields: IFormFields;
+    error?: string;
     errors: IFormErrors<IFormFields>;
 }
 
@@ -155,9 +156,15 @@ export default class JogsAddForm extends React.Component<IJogsAddFormProps, IJog
             });
         }
 
+        this.setState({ error: '', errors: {} });
+
         return onSubmit(time!, distance!).then(() => {
             onSuccess && onSuccess();
         }).catch(() => {
+            this.setState({
+                error: 'Something went wrong. Please try again.'
+            });
+
             onFailure && onFailure();
         });
     }
@@ -205,7 +212,7 @@ export default class JogsAddForm extends React.Component<IJogsAddFormProps, IJog
 
     public renderEditForm() {
         const { onCancel } = this.props;
-        const { errors } = this.state;
+        const { errors, error } = this.state;
 
         return (
             <StyledEditForm>
@@ -221,6 +228,7 @@ export default class JogsAddForm extends React.Component<IJogsAddFormProps, IJog
                         {errors.time && <Error>{errors.time}</Error>}
                     </EditFormField>
                 </div>
+                {error && <Error>{error}</Error>}
                 <EditActions>
                     <Action onClick={onCancel}>
                         <CancelIcon/>
@@ -235,7 +243,7 @@ export default class JogsAddForm extends React.Component<IJogsAddFormProps, IJog
 
     public renderAddForm() {
         const { onCancel, focusAfterRender } = this.props;
-        const { errors } = this.state;
+        const { errors, error } = this.state;
 
         return (
             <StyledAddForm>
@@ -251,6 +259,7 @@ export default class JogsAddForm extends React.Component<IJogsAddFormProps, IJog
                         {errors.time && <Error>{errors.time}</Error>}
                     </AddFormField>
                 </div>
+                {error && <Error>{error}</Error>}
                 <AddFormActions>
                     <Action onClick={onCancel}>
                         <CancelIcon/></Action>

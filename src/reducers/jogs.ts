@@ -48,7 +48,8 @@ const jogsByIdReducer = (state: JogsByIdState = jogsByIdInitialState, action: Jo
             return {
                 ...state,
                 didInvalidate: false,
-                data: [action.payload, ...state.data],
+                data: [action.payload.id, ...state.data],
+                page: action.payload.resetPage ? 1 : state.page,
             };
         default:
             return state;
@@ -61,6 +62,8 @@ const filtersReducer = (state: FiltersState = filterInitialState, action: JogsAc
             return { ...state, startDate: action.payload };
         case JogsActionTypes.SET_END_DATE:
             return { ...state, endDate: action.payload };
+        case JogsActionTypes.ADD_JOG:
+            return { ...state, startDate: null, endDate: null };
         default:
             return state;
     }

@@ -20,11 +20,19 @@ export const getFilteredJogsById = createSelector(
         const { startDate, endDate } = filters;
 
         if (startDate) {
-            newJogs = newJogs.filter(jog => new Date(jog.date * 1000) > startDate);
+            newJogs = newJogs.filter(jog => {
+                const date = isNaN(jog.date) ? jog.date : jog.date * 1000;
+
+                return new Date(date).getTime() >= startDate.getTime();
+            });
         }
 
         if (endDate) {
-            newJogs = newJogs.filter(jog => new Date(jog.date * 1000) < endDate);
+            newJogs = newJogs.filter(jog => {
+                const date = isNaN(jog.date) ? jog.date : jog.date * 1000;
+
+                return new Date(date).getTime() <= endDate.getTime();
+            });
         }
 
         return newJogs;
