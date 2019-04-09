@@ -108,10 +108,10 @@ const JogsList = React.memo((props: IJogsListProps) => {
                     </WithoutJogs>
                 }
                 {jogs.map((jog) => <Jog key={jog.id} jog={jog} />)}
+                <LoadMoreButton onClick={loadMore} visible={hasMore}>
+                    Load More
+                </LoadMoreButton>
             </JogsContainer>
-            <LoadMoreButton onClick={loadMore} visible={hasMore}>
-                Load More
-            </LoadMoreButton>
             <AddJogButton visible={!isModalOpen} onClick={() => setModalState(true)}>
                 <img src={process.env.PUBLIC_URL + '/add.svg'} />
             </AddJogButton>

@@ -33,6 +33,10 @@ const JogInfo = styled.div`
     }
 `;
 
+const JogIcon = styled.img`
+    cursor: pointer;
+`;
+
 const JogAttribute = styled.div`
     margin-top: 0.5rem;
 `;
@@ -51,7 +55,7 @@ const Jog = React.memo((props: IJogProps) => {
 
     return (
         <JogContainer>
-            <img onClick={() => setEditState(true)} src={process.env.PUBLIC_URL + '/jog.svg'} />
+            <JogIcon onClick={() => setEditState(true)} src={process.env.PUBLIC_URL + '/jog.svg'} />
             <JogInfo>
                 <JogAttribute>{new Date(date).toDateString()}</JogAttribute>
                 { isEdit ?

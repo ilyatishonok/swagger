@@ -38,15 +38,19 @@ const LetMeInButton = styled.button`
     color: ${ props => props.theme.white };
     border: 0.2rem solid ${ props => props.theme.white };;
 
+    &:hover {
+        background-color: ${ props => props.theme.main };
+        color: ${ props => props.theme.white };
+    }
+    
     @media (max-width: 500px) {
         width: 90%;
         color: ${ props => props.theme.primary }
         border: 0.2rem solid ${ props => props.theme.primary };
-    }
-
-    &:hover {
-        background-color: ${ props => props.theme.primary };
-        color: ${ props => props.theme.white };
+        
+        &:hover {
+            background-color: ${ props => props.theme.primary };
+        }
     }
 `;
 
